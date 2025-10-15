@@ -10,7 +10,7 @@ def health():
 
 @app.get("/")
 def read_root():
-    return {"message": "Hello from myapp!"}
+    return {"message": "Hello to cicd world!"}
 
 if __name__ == "__main__":
     import uvicorn
