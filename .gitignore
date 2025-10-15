@@ -1,0 +1,20 @@
+myenv/ 
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Database
+db.sqlite3
+
+# Django static/media
+/staticfiles/
+/media/
+
+# Environment variables
+.env
+
+# VS Code and system files
+.vscode/
+.DS_Store
