@@ -1,20 +1,8 @@
-myenv/ 
-venv/
-
-# Python cache
 __pycache__/
-*.pyc
-
-# Database
-db.sqlite3
-
-# Django static/media
-/staticfiles/
-/media/
-
-# Environment variables
+.venv/
 .env
-
-# VS Code and system files
+*.pyc
+dist/
+build/
+*.egg-info
 .vscode/
-.DS_Store
