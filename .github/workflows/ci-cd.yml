@@ -1,4 +1,3 @@
-# .github/workflows/ci-cd.yml
 name: CI/CD
 
 on:
@@ -28,8 +27,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run tests
-        run: |
-          pytest --junitxml=reports/junit.xml
+        run: pytest --junitxml=reports/junit.xml
 
       - name: Upload test report
         uses: actions/upload-artifact@v4
@@ -73,29 +71,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Decode Kubeconfig
-        if: ${{ secrets.KUBE_CONFIG }}
+      - name: Decode Kubeconfig and Deploy to Kubernetes
         run: |
-          echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > kubeconfig
-          export KUBECONFIG=$PWD/kubeconfig
-          kubectl config current-context
-
-      - name: Deploy to Kubernetes
-        if: ${{ secrets.KUBE_CONFIG }}
-        run: |
-          export KUBECONFIG=$PWD/kubeconfig
-          kubectl set image deployment/myapp myapp=${{ env.IMAGE }}:${{ github.sha }} -n staging || kubectl apply -f k8s/deployment.yaml -n staging
-          kubectl rollout status deployment/myapp -n staging --timeout=120s
-
-      - name: Optional: SSH deploy to remote Docker host
-        if: ${{ secrets.REMOTE_SSH }}
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host: ${{ secrets.REMOTE_HOST }}
-          username: ${{ secrets.REMOTE_USER }}
-          key: ${{ secrets.REMOTE_PRIVATE_KEY }}
-          script: |
-            docker pull ${{ env.IMAGE }}:${{ github.sha }}
-            docker stop myapp || true
-            docker rm myapp || true
-            docker run -d --name myapp -p 8000:8000 ${{ env.IMAGE }}:${{ github.sha }}
+          if [ -n "${{ secrets.KUBE_CONFIG }}" ]; then
+            echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > kubeconfig
+            export KUBECONFIG=$PWD/kubeconfig
+            kubectl config current-context
+            kubectl set image deployment/myapp myapp=${{ env.IMAGE }}:${{ github.sha }} -n staging || kubectl apply -f k8s/deployment.yaml -n staging
+            kubectl rollout status deployment/myapp -n staging --timeout=120s
+          else
