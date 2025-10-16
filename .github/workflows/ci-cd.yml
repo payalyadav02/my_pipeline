@@ -29,6 +29,9 @@ jobs:
       - name: Prepare test reports directory
         run: mkdir -p reports
 
+      - name: Set PYTHONPATH
+        run: echo "PYTHONPATH=$PWD" >> $GITHUB_ENV
+
       - name: Run tests
         run: pytest --junitxml=reports/junit.xml
 
