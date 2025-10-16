@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cicd-app
+  labels:
+    app: cicd-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cicd-app
+  template:
+    metadata:
+      labels:
+        app: cicd-app
+    spec:
+      containers:
+        - name: cicd-app
+          image: my_pipeline/cicd:latest
+          ports:
+            - containerPort: 8000 # FastAPI
+            - containerPort: 8080 # Django
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cicd-service
+spec:
+  selector:
+    app: cicd-app
+  ports:
+    - port: 80
+      targetPort: 8000 # FastAPI
+    - port: 81
+      targetPort: 8080 # Django
+  type: LoadBalancer
