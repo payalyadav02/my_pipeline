@@ -86,3 +86,5 @@ jobs:
             kubectl set image deployment/cicd-app cicd-app=${{ env.IMAGE }}:${{ github.sha }} -n staging || kubectl apply -f k8s/deployment.yaml -n staging
             kubectl rollout status deployment/cicd-app -n staging --timeout=120s
           else
+            echo "KUBE_CONFIG secret is not set."
+          fi
