@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 env:
-  IMAGE: my_pipeline/cicd
+  IMAGE: payalyadav02/cicd
 
 jobs:
   test:

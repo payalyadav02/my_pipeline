@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: cicd-app
-          image: my_pipeline/cicd:latest
+          image: payalyadav02/cicd:latest
           ports:
             - containerPort: 8000 # FastAPI
             - containerPort: 8080 # Django
